@@ -25,11 +25,15 @@ func main() {
 		})
 	checkErr(err)
 	fmt.Println(snmp)
-	oid, err := snmpgo.NewOid("1.3.6.1.6.3.1.1.5.3")
-	checkErr(err)
-	fmt.Println(oid.String())
+	//	oid, err := snmpgo.NewOid("1.3.6.1.6.3.1.1.5.3")
+	//	checkErr(err)
+	//	fmt.Println(oid.String())
 	var binds snmpgo.VarBinds
-	binds = append(binds, snmpgo.NewVarBind(oid, wrapSlapInfo()))
+	info, err := getSlapInfo()
+	checkErr(err)
+	binds = append(binds,
+		snmpgo.NewVarBind(snmpgo.OidSnmpTrap,
+			snmpgo.NewOctetString([]byte{info})))
 	err = snmp.Open()
 	checkErr(err)
 	defer snmp.Close()

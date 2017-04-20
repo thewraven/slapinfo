@@ -1,70 +1,44 @@
 package main
 
 import (
-	"errors"
-	"fmt"
-	"math/big"
 	"os/exec"
 	"strconv"
 	"strings"
 
-	"github.com/k-sone/snmpgo"
 	"github.com/shirou/gopsutil/process"
 )
 
-type v struct {
-	info string
-	err  error
-}
-
-func (v *v) BigInt() (*big.Int, error) {
-	return nil, errors.New("the value hasn't an bigInt repr")
-}
-func (v *v) String() string {
-	if v.err != nil {
-		return v.err.Error()
-	}
-	return v.info
-}
-
-func (v *v) Type() string {
-	return "slapd process status"
-}
-
-func (v *v) Marshal() ([]byte, error) {
-	var marshal []byte
-	if v.err != nil {
-		marshal = []byte(v.err.Error())
-	} else {
-		marshal = []byte(v.info)
-	}
-	return marshal, nil
-}
-
-func (v *v) Unmarshal(info []byte) (rest []byte, err error) {
-	v.info = string(info)
-	return nil, nil
-}
-
-func wrapSlapInfo() snmpgo.Variable {
-	info, err := getSlapInfo()
-	fmt.Println("unwrapping variable", info, err)
-	return &v{
-		info: info,
-		err:  err,
-	}
-}
-
-func getSlapInfo() (string, error) {
+func getSlapInfo() (byte, error) {
 	id, err := getSlapID()
+	var statusCode byte = 0xFF
 	if err != nil {
-		return "", err
+		return statusCode, err
 	}
 	process, err := process.NewProcess(int32(id))
 	if err != nil {
-		return "", err
+		return statusCode, err
 	}
-	return process.Status()
+	sts, err := process.Status()
+	if err != nil {
+		return statusCode, err
+	}
+	switch sts {
+	case "R":
+		statusCode = 0x01
+	case "S":
+		statusCode = 0x02
+	case "I":
+		statusCode = 0x03
+	case "T":
+		statusCode = 0x04
+	case "Z":
+		statusCode = 0x05
+	case "W":
+		statusCode = 0x06
+	case "L":
+		statusCode = 0x07
+	}
+	return statusCode, nil
 }
 
 func getSlapID() (int, error) {
