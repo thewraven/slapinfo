@@ -1,0 +1,10 @@
+hash: 5c54fd01f2c7364f60436ebfdbf56051df99cc7addff22b4c20419dcf2a83689
+updated: 2017-04-20T10:02:35.186522819-05:00
+imports:
+- name: github.com/geoffgarside/ber
+  version: 854377f11dfb81f04121879829bc53487e377739
+- name: github.com/k-sone/snmpgo
+  version: de09377ff34857b08afdc16ea8c7c2929eb1fc6e
+- name: github.com/shirou/gopsutil
+  version: e49a95f3d5f824c3f9875ca49e54e4fef17f82cf
+testImports: []
