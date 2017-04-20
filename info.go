@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"os/exec"
 	"strconv"
+	"strings"
 
 	"github.com/k-sone/snmpgo"
 	"github.com/shirou/gopsutil/process"
@@ -72,5 +73,7 @@ func getSlapID() (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	return strconv.Atoi(string(result))
+	content := string(result)
+	content = strings.Replace(content, "\n", "", -1)
+	return strconv.Atoi(content)
 }
