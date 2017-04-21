@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"slapinfo/stats"
+	"github.com/thewraven/slapinfo/stats"
 
 	"github.com/k-sone/snmpgo"
 )
