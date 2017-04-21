@@ -2,6 +2,7 @@ package main
 
 import (
 	"os/exec"
+	"slapinfo/stats"
 	"strconv"
 	"strings"
 
@@ -10,7 +11,7 @@ import (
 
 func getSlapInfo() (byte, error) {
 	id, err := getSlapID()
-	var statusCode byte = 0xFF
+	var statusCode byte = stats.Unavailable
 	if err != nil {
 		return statusCode, err
 	}
@@ -24,19 +25,19 @@ func getSlapInfo() (byte, error) {
 	}
 	switch sts {
 	case "R":
-		statusCode = 0x01
+		statusCode = stats.Running
 	case "S":
-		statusCode = 0x02
+		statusCode = stats.Sleep
 	case "I":
-		statusCode = 0x03
+		statusCode = stats.Idle
 	case "T":
-		statusCode = 0x04
+		statusCode = stats.Stopped
 	case "Z":
-		statusCode = 0x05
+		statusCode = stats.Zombie
 	case "W":
-		statusCode = 0x06
+		statusCode = stats.Wait
 	case "L":
-		statusCode = 0x07
+		statusCode = stats.Lock
 	}
 	return statusCode, nil
 }
