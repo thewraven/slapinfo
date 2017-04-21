@@ -2,9 +2,10 @@ package main
 
 import (
 	"os/exec"
-	"slapinfo/stats"
 	"strconv"
 	"strings"
+
+	"github.com/thewraven/slapinfo/stats"
 
 	"github.com/shirou/gopsutil/process"
 )
