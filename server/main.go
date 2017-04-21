@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
+
 	"github.com/thewraven/slapinfo/stats"
 
 	"github.com/k-sone/snmpgo"
@@ -25,9 +27,16 @@ func NewTrapListener() *TrapListener {
 	return &TrapListener{logger: log.New(os.Stdout, "", log.LstdFlags)}
 }
 
+var addr *string
+
+func init() {
+	addr = flag.String("addr", "127.0.0.1:162", "address to bind")
+	flag.Parse()
+}
+
 func main() {
 	server, err := snmpgo.NewTrapServer(snmpgo.ServerArguments{
-		LocalAddr: "127.0.0.1:162",
+		LocalAddr: *addr,
 	})
 	if err != nil {
 		log.Fatal(err)
